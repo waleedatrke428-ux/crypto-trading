@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # Firebase Emulators for local development
+  firebase-emulator:
+    image: firebase/firebase-tools:latest
+    command: emulators:start --project crypto-trading-dev
+    ports:
+      - "4000:4000"   # Firestore
+      - "9099:9099"   # Auth
+      - "5000:5000"   # Functions
+      - "8080:8080"   # Hosting
+      - "9199:9199"   # Storage
+    volumes:
+      - .:/workspace
+      - firebase-cache:/root/.cache
+    working_dir: /workspace
+    environment:
+      - FIREBASE_PROJECT_ID=crypto-trading-dev
+
+volumes:
+  firebase-cache:

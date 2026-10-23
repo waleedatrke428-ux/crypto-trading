@@ -1,0 +1,61 @@
+name: Build Web App
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        working-directory: ./app
+        run: flutter pub get
+
+      - name: Build Web (Release)
+        working-directory: ./app
+        run: flutter build web --release
+
+      - name: Upload Web Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: app/build/web
+          retention-days: 30
+
+      - name: Deploy to Firebase Hosting
+        if: github.ref == 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}'
+          channelId: live
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+      - name: Build Functions
+        working-directory: ./functions
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy Functions
+        if: github.ref == 'refs/heads/main'
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
