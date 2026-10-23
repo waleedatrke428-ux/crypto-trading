@@ -55,7 +55,7 @@ jobs:
           retention-days: 7
 
       - name: Upload to Firebase App Distribution (Optional)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && secrets.FIREBASE_APP_ID_ANDROID != ''
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
