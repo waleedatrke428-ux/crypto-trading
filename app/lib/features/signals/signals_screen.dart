@@ -85,7 +85,17 @@ class _SignalsScreenState extends State<SignalsScreen> {
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(
-            child: Text('لا توجد إشارات حالياً'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.show_chart, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                Text(
+                  'لا توجد إشارات حالياً',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
           );
         }
 
@@ -117,7 +127,17 @@ class _SignalsScreenState extends State<SignalsScreen> {
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(
-            child: Text('لا توجد إشارات لهذا الزوج'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.show_chart, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                Text(
+                  'لا توجد إشارات لهذا الزوج',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
           );
         }
 
